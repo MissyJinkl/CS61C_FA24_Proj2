@@ -85,12 +85,6 @@ class TestAbsLoss(unittest.TestCase):
         t.call("abs_loss")
         t.execute(code=36)
     
-    #def test_exception2(self):
-     #   t = AssemblyTest(self, "../coverage-src/abs_loss.s")
-      #  t.input_scalar("a2", 2147483647)
-       # t.call("abs_loss")
-        #t.execute(code=26)
-    
 
     @classmethod
     def tearDownClass(cls):
@@ -121,29 +115,45 @@ class TestSquaredLoss(unittest.TestCase):
     def test_simple(self):
         # load the test for squared_loss.s
         t = AssemblyTest(self, "../coverage-src/squared_loss.s")
-        raise NotImplementedError("TODO")
+        
         # TODO
         # create input arrays in the data section
-        #array0 = t.array([1, -2, 3, -4, 5, -6, 7, -8, 9])
+        array0 = t.array([1, 2, 3, 4, 5])
+        array1 = t.array([0, 1, 2, 3, 4])
         # TODO
         # load array addresses into argument registers
+        t.input_array("a0", array0)
+        t.input_array("a1", array1)
         # TODO
         # load array length into argument register
+        t.input_scalar("a2", len(array1))
         # TODO
         # create a result array in the data section (fill values with -1)
+        array2 = t.array([-1, -1, -1, -1, -1])
         # TODO
         # load result array address into argument register
+        t.input_array("a3", array2)
         # TODO
         # call the `squared_loss` function
+        t.call("squared_loss")
         # TODO
         # check that the result array contains the correct output
+        t.check_array(array2, [1, 1, 1, 1, 1])
         # TODO
         # check that the register a0 contains the correct output
+        t.check_scalar("a0", 5)
         # TODO
         # generate the `assembly/TestSquaredLoss_test_simple.s` file and run it through venus
         # TODO
+        t.execute()
 
     # Add other test cases if neccesary
+    def test_exception1(self):
+        t = AssemblyTest(self, "../coverage-src/squared_loss.s")
+        t.input_scalar("a2", 0)
+        t.call("squared_loss")
+        t.execute(code=36)
+        
 
     @classmethod
     def tearDownClass(cls):
