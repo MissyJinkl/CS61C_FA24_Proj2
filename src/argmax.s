@@ -16,15 +16,31 @@
 # =================================================================
 argmax:
     # Prologue
-
+    li t0, 1
+    blt a1, t0, exceptions
+    li t1, 0 # i = 0
+    li t5, 0 # the index of max argument
+    mv t2, a0 # t2 is the pointer
+    lw t6, 0(a0) # the max argument
 
 loop_start:
-
+    bge t1, a1, loop_end
+    lw t4, 0(t2)
+    bge t6, t4, loop_continue
+    mv t6, t4
+    mv t5, t1
+    
 
 loop_continue:
-
+    addi t2, t2, 4
+    addi t1, t1, 1
+    j loop_start
 
 loop_end:
     # Epilogue
-
+    mv a0, t5
     jr ra
+    
+exceptions:
+    li a0 36
+    j exit
