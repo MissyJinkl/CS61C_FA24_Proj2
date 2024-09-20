@@ -29,7 +29,6 @@ loop_start:
     bge t6, t4, loop_continue
     mv t6, t4
     mv t5, t1
-    
 
 loop_continue:
     addi t2, t2, 4
