@@ -246,22 +246,26 @@ class TestZeroOneLoss(unittest.TestCase):
     # Add other test cases if neccesary
     def test_exception1(self):
         t = AssemblyTest(self, "../coverage-src/zero_one_loss.s")
+        array0 = t.array([1, 2, 3, 4, 5])
+        array1 = t.array([0, 1, 2, 3, 4])
+        t.input_array("a0", array0)
+        t.input_array("a1", array1)
         t.input_scalar("a2", 0)
         t.call("zero_one_loss")
         t.execute(code=36)
         
-    def test_simple2(self):
+    def test_simple_onezero(self):
         # load the test for abs_loss.s
-        t = AssemblyTest(self, "../coverage-src/abs_loss.s")
+        t = AssemblyTest(self, "../coverage-src/zero_one_loss.s")
 
         # create array0 in the data section
-        array0 = t.array([0])
+        array0 = t.array([-1,0,1])
         # TODO
         # load address of `array0` into register a0
         t.input_array("a0", array0)
         # TODO
         # create array1 in the data section
-        array1 = t.array([0])
+        array1 = t.array([-1,1,1])
         # TODO
         # load address of `array1` into register a1
         t.input_array("a1", array1)
@@ -270,19 +274,16 @@ class TestZeroOneLoss(unittest.TestCase):
         t.input_scalar("a2", len(array1))
         # TODO
         # create a result array in the data section (fill values with -1)
-        array2 = t.array([0])
+        array2 = t.array([-1,-1,-1])
         # TODO
         # load address of `array2` into register a3
         t.input_array("a3", array2)
         # TODO
-        # call the `abs_loss` function
-        t.call("abs_loss")
+        # call the `zero_one_loss` function
+        t.call("zero_one_loss")
         # TODO
         # check that the result array contains the correct output
-        t.check_array(array2, [1])
-        # TODO
-        # check that the register a0 contains the correct output
-  
+        t.check_array(array2, [1,0,1])
         # TODO
         # generate the `assembly/TestAbsLoss_test_simple.s` file and run it through venus
         t.execute()
