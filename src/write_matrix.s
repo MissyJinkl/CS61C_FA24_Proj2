@@ -38,3 +38,15 @@ write_matrix:
 
 
     jr ra
+
+exception_27:
+    li a0, 27
+    j exit
+
+exception_28:
+    li a0, 28
+    j exit
+
+exception_30:
+    li a0, 30
+    j exit
