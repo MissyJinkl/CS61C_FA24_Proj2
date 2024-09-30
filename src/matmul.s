@@ -34,7 +34,7 @@ matmul:
     blt a5, t0, exceptions
     bne a2, a4, exceptions
     
-    addi sp sp -32
+    addi sp sp -40
     sw s0, 0(sp)
     sw s1, 4(sp)
     sw s2, 8(sp)
@@ -42,49 +42,55 @@ matmul:
     sw s4, 16(sp)
     sw s5, 20(sp)
     sw s6, 24(sp)
-    sw ra, 28(sp)
+    sw s7, 28(sp)
+    sw s8, 32(sp)
+    sw ra, 36(sp)
 
     mv s0, a0
     mv s1, a1
     mv s2, a2
     mv s3, a3
     mv s4, a4
+    mv s5, a5
+    mv s6, a6
 
     # Prologue
-    li s5, 0 #i counter
+    li s7, 0 #i counter
 
 outer_loop_start:
-    bge s5, s1, outer_loop_end
-    li s6, 0 #j counter
+    bge s7, s1, outer_loop_end
+    li s8, 0 #j counter
 
 inner_loop_start:
-    bge s6, a5, inner_loop_end
+    bge s6, s5, inner_loop_end
     
-    mul a0, s2, s5 
+    mul a0, s2, s7 
     add a0, a0, s0
-    add a1, s3, s6
+    add a1, s3, s8
     mv a2, s2
     li a3, 1
-    mv a4, a5
+    mv a4, s5
     
     jal dot
     
-    mul a1, s5, s1
+    mul a1, s7, s1
+    add a1, a1, s8
     add a1, a1, s6
-    add a1, a1, a6
     sw a0, 0(a1)
     
-    addi s6, s6, 1
+    addi s8, s8, 1
     j inner_loop_start
 
 
 inner_loop_end:
-    addi s5, s5, 1
+    addi s7, s7, 1
     j outer_loop_start
     
 outer_loop_end:
     # Epilogue
-    lw ra, 28(sp)
+    lw ra, 36(sp)
+    lw s8, 32(sp)
+    lw s7, 28(sp)
     lw s6, 24(sp)
     lw s5, 20(sp)
     lw s4, 16(sp)
@@ -92,7 +98,7 @@ outer_loop_end:
     lw s2, 8(sp)
     lw s1, 4(sp)
     lw s0, 0(sp) 
-    addi sp sp 32
+    addi sp sp 40
     jr ra
     
 exceptions:
