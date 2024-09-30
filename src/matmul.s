@@ -62,21 +62,21 @@ outer_loop_start:
     li s8, 0 #j counter
 
 inner_loop_start:
-    bge s6, s5, inner_loop_end
+    bge s8, s5, inner_loop_end
     
-    mul a0, s2, s7 
+    mul a0, s2, s7
+    slli a0, a0, 2
     add a0, a0, s0
-    add a1, s3, s8
+    slli a5, s8, 2
+    add a1, s3, a5
     mv a2, s2
     li a3, 1
     mv a4, s5
     
     jal dot
     
-    mul a1, s7, s1
-    add a1, a1, s8
-    add a1, a1, s6
-    sw a0, 0(a1)
+    addi s6, s6, 4
+    sw a0, -4(s6)
     
     addi s8, s8, 1
     j inner_loop_start
