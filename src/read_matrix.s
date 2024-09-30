@@ -25,18 +25,39 @@
 #     this function terminates the program with error code 29
 # ==============================================================================
 read_matrix:
-
     # Prologue
+    addi sp sp -4
+    sw ra 0(sp)
 
+    li t0, 0
+    li a1, 0
+    jal fopen
+    blt a0, t0, exception_26
 
-
-
-
-
+    li a2, 8
+    jal fread
+    bne a0, a2, exception_27
 
 
 
     # Epilogue
-
-
+    
+    sw ra 0(sp)
+    addi sp sp 4
     jr ra
+    
+exception_26:
+    li a0, 26
+    j exit
+    
+exception_27:
+    li a0, 27
+    j exit
+    
+exception_28:
+    li a0, 28
+    j exit
+    
+exception_29: 
+    li a0, 29
+    j exit
