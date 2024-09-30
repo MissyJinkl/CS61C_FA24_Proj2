@@ -23,20 +23,44 @@
 #     this function terminates the program with error code 30
 # ==============================================================================
 write_matrix:
-
     # Prologue
+    addi sp sp -28
+    sw ra 0(sp)
+    sw s0, 4(sp)
+    sw s1, 8(sp)
+    sw s2, 12(sp)
+    sw s3, 16(sp)
+    sw s4, 20(sp)
+    sw s5, 24(sp)
+    
+  
+    mv s0, a0
+    mv s1, a1
+    mv s2, a2
+    mv s3, a3
+
+    li a1, 0
+    jal fopen
+    blt a0, x0, exception_27
+    mv s4, a0 #s4 is the return value of fopen
 
 
 
 
 
-
-
-
+    jal fclose
+    bne a0, x0, exception_28
+    
 
     # Epilogue
-
-
+    lw s5, 24(sp)
+    lw s4, 20(sp)
+    lw s3, 16(sp)
+    lw s2, 12(sp)
+    lw s1, 8(sp)
+    lw s0, 4(sp)
+    lw ra 0(sp)
+    addi sp sp 28
     jr ra
 
 exception_27:
