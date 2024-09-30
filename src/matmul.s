@@ -1,4 +1,4 @@
-.import dot.s
+
 .globl matmul
 
 
@@ -34,7 +34,7 @@ matmul:
     blt a5, t0, exceptions
     bne a2, a4, exceptions
     
-    addi sp sp -28
+    addi sp sp -32
     sw s0, 0(sp)
     sw s1, 4(sp)
     sw s2, 8(sp)
@@ -42,6 +42,7 @@ matmul:
     sw s4, 16(sp)
     sw s5, 20(sp)
     sw s6, 24(sp)
+    sw ra, 28(sp)
 
     mv s0, a0
     mv s1, a1
@@ -57,7 +58,7 @@ outer_loop_start:
     li s6, 0 #j counter
 
 inner_loop_start:
-    bge s5, a5, inner_loop_end
+    bge s6, a5, inner_loop_end
     
     mul a0, s2, s5 
     add a0, a0, s0
@@ -74,7 +75,7 @@ inner_loop_start:
     sw a0, 0(a1)
     
     addi s6, s6, 1
-    j outer_loop_start
+    j inner_loop_start
 
 
 inner_loop_end:
@@ -83,7 +84,7 @@ inner_loop_end:
     
 outer_loop_end:
     # Epilogue
-    
+    lw ra, 28(sp)
     lw s6, 24(sp)
     lw s5, 20(sp)
     lw s4, 16(sp)
@@ -91,9 +92,9 @@ outer_loop_end:
     lw s2, 8(sp)
     lw s1, 4(sp)
     lw s0, 0(sp) 
-    addi sp sp 28
+    addi sp sp 32
     jr ra
     
 exceptions:
     li a0, 38
-    j outer_loop_end
+    j exit
