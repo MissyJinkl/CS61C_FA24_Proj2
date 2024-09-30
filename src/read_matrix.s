@@ -28,17 +28,47 @@ read_matrix:
     # Prologue
     addi sp sp -4
     sw ra 0(sp)
+    
+    mv t0, a0
+    mv t1, a1
+    mv t2, a2
 
-    li t0, 0
     li a1, 0
     jal fopen
-    blt a0, t0, exception_26
+    blt a0, x0, exception_27
+    mv t3, a0 #t3 is the return value of fopen
 
-    li a2, 8
+    mv a1, t1
+    li a2, 4
     jal fread
-    bne a0, a2, exception_27
+    bne a0, a2, exception_29
+    
+    mv a0, t3
+    mv a1, t2
+    li a2, 4
+    jal fread
+    bne a0, a2, exception_29
+    
+    lw a0, 0(t1) #num of rows
+    lw a1, 0(t2) #num of columns
+    mul a0, a0, a1
+    slli a0, a0, 2
+    mv t5, a0 #t5 is the number of elements*4
+    jal malloc
+    bne a0, x0, exception_26
+    mv t4, a0 #t4 is the pointer to malloced space
+    
+    mv a0, t3
+    mv a1, t4
+    li a2, t5
+    jal fread
+    bne a0, a2, exception_29
 
-
+    mv a0, t3
+    jal fclose
+    bne a0, x0, exception_28
+    
+    mv a0, t4
 
     # Epilogue
     
