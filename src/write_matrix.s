@@ -24,14 +24,14 @@
 # ==============================================================================
 write_matrix:
     # Prologue
-    addi sp sp -28
+    addi sp sp -32
     sw ra 0(sp)
     sw s0, 4(sp)
     sw s1, 8(sp)
     sw s2, 12(sp)
     sw s3, 16(sp)
     sw s4, 20(sp)
-    sw s5, 24(sp)
+    
     
   
     mv s0, a0
@@ -44,6 +44,24 @@ write_matrix:
     blt a0, x0, exception_27
     mv s4, a0 #s4 is the return value of fopen
 
+    sw s2, 24(sp)
+    addi a1, sp, 24
+    li a2, 1
+    li a3, 4
+    jal fwrite
+    li a2, 1
+    bne a2, a0, exception_30
+    
+    mv a0, s4
+    sw s3, 28(sp)
+    addi a1, sp, 28
+    li a2, 1
+    li a3, 4
+    jal fwrite
+    li a2, 1
+    bne a2, a0, exception_30
+    
+    mv a0, s4
     mv a1, s1
     mul a2, s2, s3
     li a3, 4
@@ -56,14 +74,13 @@ write_matrix:
     bne a0, x0, exception_28
     
     # Epilogue
-    lw s5, 24(sp)
     lw s4, 20(sp)
     lw s3, 16(sp)
     lw s2, 12(sp)
     lw s1, 8(sp)
     lw s0, 4(sp)
     lw ra 0(sp)
-    addi sp sp 28
+    addi sp sp 32
     jr ra
 
 exception_27:
