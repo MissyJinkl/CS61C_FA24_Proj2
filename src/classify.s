@@ -131,7 +131,7 @@ classify:
     addi a1, a1, 16
     lw a0 0(a1)
     mv a1, s9
-    mv a2, s3
+    mv a2, s6
     mv a3, s10
     jal write_matrix
 
