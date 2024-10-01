@@ -138,7 +138,7 @@ classify:
 
     # Compute and return argmax(o)
     mv a0, s9
-    mul a1, s1, s5
+    mul a1, s6, s10
     jal argmax
     mv s1, a0 #s1 - index of the largest element of 0 OR smallest index of the repeated largest element
 
@@ -153,13 +153,20 @@ classify:
     
 skip_print:
     
+    mv a0, s4
+    jal free
     
-    lw s11, 52(sp)
+    mv a0, s9
+    jal free
+    
+    mv a0, s1
+    
+    lw s11, 48(sp)
     lw s10, 44(sp)
     lw s9, 40(sp)
     lw s8, 36(sp)
     lw s7, 32(sp)
-    lw s6, 28(s0)
+    lw s6, 28(sp)
     lw s5, 24(sp)
     lw s4, 20(sp)
     lw s3, 16(sp)
@@ -168,14 +175,6 @@ skip_print:
     lw s0, 4(sp)
     lw ra 0(sp)
     addi sp sp 60
-    
-    mv a0, s1
-    
-    mv a0, s4
-    jal free
-    
-    mv a0, s9
-    jal free
     
     jr ra
     
