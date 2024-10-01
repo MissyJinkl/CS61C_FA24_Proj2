@@ -159,6 +159,9 @@ skip_print:
     mv a0, s9
     jal free
     
+    mv a0, s10
+    jal free
+    
     mv a0, s1
     
     lw s11, 48(sp)
