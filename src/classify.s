@@ -26,6 +26,7 @@
 classify:
     li t0, 5
     bne a0, t0, exception_31
+    
     addi sp sp -60
     sw ra 0(sp)
     sw s0, 4(sp)
@@ -47,18 +48,6 @@ classify:
     
     # Read pretrained m0
     
-    #li a0, 4
-    #jal malloc
-    #mv s3, a0
-    #lw s3, 0(a1) #s3 = rows of m0
-    #jal free
-    
-    #li a0, 4
-    #jal malloc
-    #mv s4, a0
-    #lw s4, 0(a2) #s4 = cols of m0
-    #jal free
-    
     addi t1, s1, 4
     lw a0, 0(t1)
     addi a1 sp 52
@@ -70,17 +59,6 @@ classify:
 
 
     # Read pretrained m1
-    #li a0, 4
-    #jal malloc
-    #mv s6, a0
-    #lw s6, 0(a1) #s6 = rows of m1
-    #jal free
-    
-    #li a0, 4
-    #jal malloc
-    #mv s7, a0
-    #lw s7, 0(a2) #s7 = cols of m1
-    #jal free
     
     addi t1, s1, 8
     lw a0, 0(t1)
@@ -88,22 +66,11 @@ classify:
     addi a2 sp 56
     jal read_matrix
     mv s8, a0 #s8 is a pointer to m1
-    lw s6, 52(sp) #s3 = rows of m1
-    lw s7, 56(sp) #s4 = cols of m1
+    lw s6, 52(sp) #s6 = rows of m1
+    lw s7, 56(sp) #s7 = cols of m1
    
 
     # Read input matrix
-    #li a0, 4
-    #jal malloc
-    #mv s9, a0
-    #lw s9, 0(a1) #s9 = rows of input
-    #jal free
-    
-    #li a0, 4
-    #jal malloc
-    #mv s10, a0
-    #lw s10, 0(a2) #s10 = cols of input
-    #jal free
     
     addi t1, s1, 12
     lw a0, 0(t1)
@@ -111,21 +78,21 @@ classify:
     addi a2 sp 56
     jal read_matrix
     mv s11, a0 #s11 is a pointer to input
-    lw s9, 52(sp) #s3 = rows of input
-    lw s10, 56(sp) #s4 = cols of input
+    lw s9, 52(sp) #s9 = rows of input
+    lw s10, 56(sp) #s10 = cols of input
     
 
     # Compute h = matmul(m0, input)
-    mul a0, s1, s5
+    mul a0, s3, s10
     slli a0, a0, 2
     jal malloc
     beq a0, x0, exception_26
+    mv a2, s4
     mv a6, a0
     mv s4, a6 #s4 = address of h
     
     mv a0, s5
     mv a1, s3
-    mv a2, s4
     mv a3, s11
     mv a4, s9
     mv a5, s10
@@ -134,9 +101,8 @@ classify:
     
 
     # Compute h = relu(h)
-    mv a0, s3
-    mul a1, s1, s5
-    
+    mv a0, s4
+    mul a1, s3, s10
     jal relu
 
 
@@ -151,6 +117,7 @@ classify:
     mv a0, s8
     mv a1, s6
     mv a2, s7
+    
     mv a3, s4
     mv a4, s3
     mv a5, s10
@@ -200,7 +167,7 @@ skip_print:
     lw s1, 8(sp)
     lw s0, 4(sp)
     lw ra 0(sp)
-    addi sp sp 52
+    addi sp sp 60
     
     mv a0, s1
     
