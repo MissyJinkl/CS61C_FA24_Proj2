@@ -24,7 +24,9 @@
 # Usage:
 #   main.s <M0_PATH> <M1_PATH> <INPUT_PATH> <OUTPUT_PATH>
 classify:
-    addi sp sp -52
+    li t0, 5
+    bne a0, t0, exception_31
+    addi sp sp -60
     sw ra 0(sp)
     sw s0, 4(sp)
     sw s1, 8(sp)
@@ -45,66 +47,79 @@ classify:
     
     # Read pretrained m0
     
-    li a0, 4
-    jal malloc
-    mv a1, a0
-    lw s3, 0(a1) #s3 = rows of m0
-    jal free
+    #li a0, 4
+    #jal malloc
+    #mv s3, a0
+    #lw s3, 0(a1) #s3 = rows of m0
+    #jal free
     
-    li a0, 4
-    jal malloc
-    mv a2, a0
-    lw s4, 0(a2) #s4 = cols of m0
-    jal free
+    #li a0, 4
+    #jal malloc
+    #mv s4, a0
+    #lw s4, 0(a2) #s4 = cols of m0
+    #jal free
     
     addi t1, s1, 4
     lw a0, 0(t1)
+    addi a1 sp 52
+    addi a2 sp 56
     jal read_matrix
     mv s5, a0 #s5 is a pointer to m0
+    lw s3, 52(sp) #s3 = rows of m0
+    lw s4, 56(sp) #s4 = cols of m0
 
 
     # Read pretrained m1
-    li a0, 4
-    jal malloc
-    mv a1, a0
-    lw s6, 0(a1) #s6 = rows of m1
-    jal free
+    #li a0, 4
+    #jal malloc
+    #mv s6, a0
+    #lw s6, 0(a1) #s6 = rows of m1
+    #jal free
     
-    li a0, 4
-    jal malloc
-    mv a2, a0
-    lw s7, 0(a2) #s7 = cols of m1
-    jal free
+    #li a0, 4
+    #jal malloc
+    #mv s7, a0
+    #lw s7, 0(a2) #s7 = cols of m1
+    #jal free
     
     addi t1, s1, 8
     lw a0, 0(t1)
+    addi a1 sp 52
+    addi a2 sp 56
     jal read_matrix
     mv s8, a0 #s8 is a pointer to m1
-
+    lw s6, 52(sp) #s3 = rows of m1
+    lw s7, 56(sp) #s4 = cols of m1
+   
 
     # Read input matrix
-    li a0, 4
-    jal malloc
-    mv a1, a0
-    lw s9, 0(a1) #s9 = rows of input
-    jal free
+    #li a0, 4
+    #jal malloc
+    #mv s9, a0
+    #lw s9, 0(a1) #s9 = rows of input
+    #jal free
     
-    li a0, 4
-    jal malloc
-    mv a2, a0
-    lw s10, 0(a2) #s10 = cols of input
-    jal free
+    #li a0, 4
+    #jal malloc
+    #mv s10, a0
+    #lw s10, 0(a2) #s10 = cols of input
+    #jal free
     
     addi t1, s1, 12
     lw a0, 0(t1)
+    addi a1 sp 52
+    addi a2 sp 56
     jal read_matrix
     mv s11, a0 #s11 is a pointer to input
+    lw s9, 52(sp) #s3 = rows of input
+    lw s10, 56(sp) #s4 = cols of input
     
 
     # Compute h = matmul(m0, input)
     mul a0, s1, s5
     slli a0, a0, 2
     jal malloc
+    beq a0, x0, exception_26
     mv a6, a0
     mv s4, a6 #s4 = address of h
     
@@ -129,6 +144,7 @@ classify:
     mul a0, s6, s10
     slli a0, a0, 2
     jal malloc
+    beq a0, x0, exception_26
     mv a6, a0
     mv s9, a6 #s9 = address of o
     
