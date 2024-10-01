@@ -156,10 +156,16 @@ skip_print:
     mv a0, s4
     jal free
     
+    mv a0, s5
+    jal free
+    
+    mv a0, s8
+    jal free
+    
     mv a0, s9
     jal free
     
-    mv a0, s10
+    mv a0, s11
     jal free
     
     mv a0, s1
