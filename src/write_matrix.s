@@ -36,22 +36,25 @@ write_matrix:
   
     mv s0, a0
     mv s1, a1
-    mv s2, a2
-    mv s3, a3
+    mv s2, a2 #num of rows
+    mv s3, a3 #num of columns
 
-    li a1, 0
+    li a1, 1
     jal fopen
     blt a0, x0, exception_27
     mv s4, a0 #s4 is the return value of fopen
 
+    mv a1, s1
+    mul a2, s2, s3
+    li a3, 4
+    jal fwrite
+    mul a2, s2, s3
+    bne a2, a0, exception_30
 
-
-
-
+    mv a0, s4
     jal fclose
     bne a0, x0, exception_28
     
-
     # Epilogue
     lw s5, 24(sp)
     lw s4, 20(sp)

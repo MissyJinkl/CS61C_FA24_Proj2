@@ -26,69 +26,54 @@
 # ==============================================================================
 read_matrix:
     # Prologue
-    addi sp sp -28
+    addi sp sp -4
     sw ra 0(sp)
-    sw s0, 4(sp)
-    sw s1, 8(sp)
-    sw s2, 12(sp)
-    sw s3, 16(sp)
-    sw s4, 20(sp)
-    sw s5, 24(sp)
     
-  
-    mv s0, a0
-    mv s1, a1
-    mv s2, a2
+    mv t0, a0
+    mv t1, a1
+    mv t2, a2
 
     li a1, 0
     jal fopen
     blt a0, x0, exception_27
-    mv s3, a0 #s3 is the return value of fopen
+    mv t3, a0 #t3 is the return value of fopen
 
-    mv a1, s1
+    mv a1, t1
     li a2, 4
     jal fread
-    li a2, 4
     bne a0, a2, exception_29
     
-    mv a0, s3
-    mv a1, s2
+    mv a0, t3
+    mv a1, t2
     li a2, 4
     jal fread
-    li a2, 4
     bne a0, a2, exception_29
     
-    lw a0, 0(s1) #num of rows
-    lw a1, 0(s2) #num of columns
+    lw a0, 0(t1) #num of rows
+    lw a1, 0(t2) #num of columns
     mul a0, a0, a1
     slli a0, a0, 2
-    mv s5, a0 #s5 is the number of elements*4
+    mv t5, a0 #t5 is the number of elements * 4
     jal malloc
-    beq a0, x0, exception_26
-    mv s4, a0 #s4 is the pointer to malloced space
+    bne a0, x0, exception_26
+    mv t4, a0 #t4 is the pointer to malloced space
     
-    mv a0, s3
-    mv a1, s4
-    mv a2, s5
+    mv a0, t3
+    mv a1, t4
+    mv a2, t5
     jal fread
-    mv a2, s5
     bne a0, a2, exception_29
 
-    mv a0, s3
+    mv a0, t3
     jal fclose
     bne a0, x0, exception_28
     
-    mv a0, s4
+    mv a0, t4
 
     # Epilogue
-    lw s5, 24(sp)
-    lw s4, 20(sp)
-    lw s3, 16(sp)
-    lw s2, 12(sp)
-    lw s1, 8(sp)
-    lw s0, 4(sp)
-    lw ra 0(sp)
-    addi sp sp 28
+    
+    sw ra 0(sp)
+    addi sp sp 4
     jr ra
     
 exception_26:
